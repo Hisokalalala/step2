@@ -12,30 +12,26 @@ with open(dict_path) as f:
 #重複削除
 dictionary = list(set(dictionary))
 
-d = defaultdict(int)
+new_dictionary = defaultdict(int)
 
-for i in range(len(dictionary)):
-    temp = dictionary[i]
-    for j in range(len(temp)):
-        d[temp] += scorechart[temp[j]]
+for dict_word in dictionary:
+    for alphabet in dict_word:
+        new_dictionary[dict_word] += scorechart[alphabet]
 
-new_dictionary = dict(d)
-
-#スコア順にソートされた辞書
+#スコア順にソートされた辞書(タプル)
 sorted_dictionary = sorted(new_dictionary.items(), key=lambda x:x[1], reverse=True)
 
 #条件を満たすスコアが一番高いのを取得
-def get_highest(given_word, dictionary_dataset):
-    for i in range(len(dictionary_dataset)):
-        common = sorted(list((Counter(given_word) & Counter(dictionary_dataset[i][0])).elements()))
-        temp = sorted(dictionary_dataset[i][0])
-        if temp == common:
-            return dictionary_dataset[i][0]
+
+def get_highest(given_word, dictionarys):
+    for dict_word in dictionarys:
+        given_word_cnt = Counter(given_word)
+        dict_word_cnt =  Counter(dict_word[0])
+        common = given_word_cnt & dict_word_cnt
+        if dict_word_cnt == common:
+            return dict_word[0]
     return None
 
-"""
-上記の辞書の単語がgiven_wordに含まれているかの比較方法はもう少し賢い方法がありそう
-"""
 
 #パス指定
 input_path = "./medium.txt"
