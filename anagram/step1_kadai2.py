@@ -14,15 +14,40 @@ dictionary = list(set(dictionary))
 
 new_dictionary = defaultdict(int)
 
+word_cnt = defaultdict(int)
+dictionary_counted = {}
+
+#辞書単語のアルファベットカウント用の辞書を作っておく。
 for dict_word in dictionary:
+    word_cnt = defaultdict(int)
     for alphabet in dict_word:
         new_dictionary[dict_word] += scorechart[alphabet]
+        word_cnt[alphabet] += 1
+    dictionary_counted[dict_word] = word_cnt
+
 
 #スコア順にソートされた辞書(タプル)
 sorted_dictionary = sorted(new_dictionary.items(), key=lambda x:x[1], reverse=True)
 
-#条件を満たすスコアが一番高いのを取得
+#アナグラムになっているかを判断
+def is_anagram(given_word, word, dictionary_cnted):
+    given_word_cnt = defaultdict(int)
+    for alphabet in given_word:
+        given_word_cnt[alphabet] += 1
+    for alphabet in word:
+        if dictionary_cnted[word][alphabet] > given_word_cnt[alphabet]:
+            return False
+    return True
 
+
+#条件を満たすスコアが一番高いのを取得
+def get_highest(given_word, dictionarys):
+    for dict_word in dictionarys:
+        if is_anagram(given_word, dict_word[0], dictionary_counted):
+            return dict_word[0]
+    return None
+
+"""
 def get_highest(given_word, dictionarys):
     for dict_word in dictionarys:
         given_word_cnt = Counter(given_word)
@@ -31,11 +56,11 @@ def get_highest(given_word, dictionarys):
         if dict_word_cnt == common:
             return dict_word[0]
     return None
-
+"""
 
 #パス指定
-input_path = "./medium.txt"
-output_path = "./medium_answer.txt"
+input_path = "./large.txt"
+output_path = "./large_answer.txt"
 
 with open(input_path) as f:
     inputs = [word.strip() for word in f.readlines()]

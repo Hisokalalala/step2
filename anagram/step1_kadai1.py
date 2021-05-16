@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 
 #辞書格納
 path = "./words.txt"
@@ -30,6 +30,18 @@ def binary_search(target, sorted_keys, dictionary):
             end = mid - 1
     return None
 
+def binary_search2(target, order_dictionary):
+    start = 0
+    end = len(order_dictionary) - 1
+    while start <= end:
+        mid = (start + end) // 2
+        if order_dictionary.key_at(mid) == target:
+            return order_dictionary.value_at(mid)
+        elif order_dictionary.key_at(mid) < target:
+            start = mid + 1
+        else:
+            end = mid - 1
+    return None
 
 #最終的な方法
 def better_solution(random_word, sorted_keys, dictionary):
@@ -76,3 +88,5 @@ def better_solution2(random_word, dictionary):
 
 print(better_solution2("udb", ordered_dictionary))
 """
+
+
