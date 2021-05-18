@@ -1,4 +1,5 @@
 from collections import defaultdict, Counter
+import time
 
 #scoreの対応表を作る
 scorechart = {"a":1, "b":3, "c":2, "d":2, "e":1, "f":3, "g":3, "h":1, "i":1, "j":4, "k":4, "l":2, "m":2, "n":1, "o":1, "p":3, "q":4, "r":1, "s":1, "t":1, "u":2, "v":3, "w":3, "x":4, "y":3, "z":4}
@@ -17,6 +18,7 @@ new_dictionary = defaultdict(int)
 word_cnt = defaultdict(int)
 dictionary_counted = {}
 
+
 #辞書単語のアルファベットカウント用の辞書を作っておく。
 for dict_word in dictionary:
     word_cnt = defaultdict(int)
@@ -25,25 +27,21 @@ for dict_word in dictionary:
         word_cnt[alphabet] += 1
     dictionary_counted[dict_word] = word_cnt
 
-
 #スコア順にソートされた辞書(タプル)
 sorted_dictionary = sorted(new_dictionary.items(), key=lambda x:x[1], reverse=True)
 
 #アナグラムになっているかを判断
-def is_anagram(given_word, word, dictionary_cnted):
-    given_word_cnt = defaultdict(int)
-    for alphabet in given_word:
-        given_word_cnt[alphabet] += 1
+def is_anagram(given_word_cnted, word, dictionary_cnted):
     for alphabet in word:
-        if dictionary_cnted[word][alphabet] > given_word_cnt[alphabet]:
+        if dictionary_cnted[word][alphabet] > given_word_cnted[alphabet]:
             return False
     return True
 
 
 #条件を満たすスコアが一番高いのを取得
-def get_highest(given_word, dictionarys):
+def get_highest(given_word_cnted, dictionarys):
     for dict_word in dictionarys:
-        if is_anagram(given_word, dict_word[0], dictionary_counted):
+        if is_anagram(given_word_cnted, dict_word[0], dictionary_counted):
             return dict_word[0]
     return None
 
@@ -66,7 +64,10 @@ with open(input_path) as f:
     inputs = [word.strip() for word in f.readlines()]
 with open(output_path, mode="w") as f:
     for i in range(len(inputs)):
-        temp = get_highest(inputs[i], sorted_dictionary)
+        given_word_cnt = defaultdict(int)
+        for alphabet in inputs[i]:
+           given_word_cnt[alphabet] += 1
+        temp = get_highest(given_word_cnt, sorted_dictionary)
         f.write(temp)
         f.write("\n")
 
