@@ -12,7 +12,8 @@ class Cache:
     ###########################
     # Write your code here :) #
     ###########################
-    pass
+    self.size = n
+    self.cache_dict = {}
 
   # Access a page and update the cache so that it stores the most
   # recently accessed N pages. This needs to be done with mostly O(1).
@@ -22,7 +23,16 @@ class Cache:
     ###########################
     # Write your code here :) #
     ###########################
-    pass
+
+    if self.cache_dict.get(url) == None:
+      if len(self.cache_dict) < self.size:
+        self.cache_dict[url] = contents
+      else:
+        self.cache_dict.pop(list(self.cache_dict.keys())[0])
+        self.cache_dict[url] = contents
+    else:
+      self.cache_dict.pop(url)
+      self.cache_dict[url] = contents
 
   # Return the URLs stored in the cache. The URLs are ordered
   # in the order in which the URLs are mostly recently accessed.
@@ -30,7 +40,7 @@ class Cache:
     ###########################
     # Write your code here :) #
     ###########################
-    pass
+    return list(self.cache_dict.keys())[::-1]
 
 
 # Does your code pass all test cases? :)
