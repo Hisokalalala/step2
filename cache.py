@@ -5,6 +5,63 @@ import sys
 #
 # Note: Please do not use a library (e.g., collections.OrderedDict).
 #       Implement the data structure yourself.
+class Node:
+  def __init__(self, data, prev_node=None, next_node=None):
+    self.prev = prev_node
+    self.data = data
+    self.next = next_node
+  
+  def get_data(self):
+    return self.data
+
+class DoublyLinkedList:
+  def __init__(self):
+    self.head = None
+    self.tail = None
+  
+  def get_tail(self):
+    return self.tail
+  
+  def get_head(self):
+    return self.head
+  
+  def append(self, data):
+    if self.head is None:
+      self.head = Node(data)
+      self.tail = self.head
+    new_node = Node(data, self.tail, None)
+    self.tail.next = new_node
+    return
+
+  def delete_mid(self, node):
+    node.prev.next = node.next
+    node.next.prev = node.prev
+
+  def delete_head(self):
+    self.head.next.prev = None
+    self.head = self.head.next
+  
+  def get_all(self):
+    ret_list = []
+    current_node = self.tail
+    while current_node:
+      ret_list.append(current_node.data[0])
+      current_node = current_node.prev
+    return ret_list
+  
+  def print(self):
+    temp = self.head
+    while(temp is not None):
+        print(temp.data, end=' ')
+        temp = temp.get_next()
+
+dlltest = DoublyLinkedList()
+dlltest.append(1)
+dlltest.append(2)
+dlltest.append(3)
+dlltest.print()
+
+
 class Cache:
   # Initializes the cache.
   # |n|: The size of the cache.
@@ -14,6 +71,7 @@ class Cache:
     ###########################
     self.size = n
     self.cache_dict = {}
+    self.dll = DoublyLinkedList()
 
   # Access a page and update the cache so that it stores the most
   # recently accessed N pages. This needs to be done with mostly O(1).
@@ -26,13 +84,17 @@ class Cache:
 
     if self.cache_dict.get(url) == None:
       if len(self.cache_dict) < self.size:
-        self.cache_dict[url] = contents
+        self.dll.append((url, contents))
+        self.cache_dict[url] = self.dll.get_tail()
       else:
-        self.cache_dict.pop(list(self.cache_dict.keys())[0])
-        self.cache_dict[url] = contents
+        self.cache_dict.pop(dll.get_head.data[0])
+        self.dll.delete_head()
+        self.dll.append((url, contents))
+        self.cache_dict[url] = self.dll.get_tail()
     else:
-      self.cache_dict.pop(url)
-      self.cache_dict[url] = contents
+      self.dll.delete_mid(cache_dict[url])
+      self.dll.append((url, contents))
+      self.cache_dict[url] = self.dll.get_tail()
 
   # Return the URLs stored in the cache. The URLs are ordered
   # in the order in which the URLs are mostly recently accessed.
@@ -40,7 +102,10 @@ class Cache:
     ###########################
     # Write your code here :) #
     ###########################
-    return list(self.cache_dict.keys())[::-1]
+    return self.dll.get_all()
+
+  def dict_debug(self):
+    return self.cache_dict
 
 
 # Does your code pass all test cases? :)
@@ -55,6 +120,10 @@ def cache_test():
   equal(cache.get_pages(), ["a.com"])
   # Access "b.com".
   cache.access_page("b.com", "BBB")
+  
+  # print(cache.dict_debug())
+  # print(cache.get_pages())
+
   # The cache is updated to:
   #   (most recently accessed)<-- "b.com", "a.com" -->(least recently accessed)
   equal(cache.get_pages(), ["b.com", "a.com"])
