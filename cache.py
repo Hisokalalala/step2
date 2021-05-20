@@ -10,37 +10,58 @@ class Node:
     self.prev = prev_node
     self.data = data
     self.next = next_node
-  
-  def get_data(self):
-    return self.data
 
 class DoublyLinkedList:
   def __init__(self):
     self.head = None
     self.tail = None
   
-  def get_tail(self):
+  def get_tail(self) -> Node:
     return self.tail
   
-  def get_head(self):
+  def get_head(self) -> Node:
     return self.head
   
   def append(self, data):
+    new_node = Node(data)
     if self.head is None:
-      self.head = Node(data)
+      self.head = new_node
       self.tail = self.head
-    new_node = Node(data, self.tail, None)
-    self.tail.next = new_node
+    else:
+      self.tail.next = new_node
+      new_node.prev = self.tail
+      self.tail = self.tail.next
     return
 
   def delete_mid(self, node):
-    node.prev.next = node.next
-    node.next.prev = node.prev
+    if node is None:
+      raise ValueError("error!")
+    if self.tail == node:
+      self.tail.prev.next = None
+      self.tail = self.tail.prev
+      node.prev = None
+    elif self.head == node:
+      self.head.next.prev = None
+      self.head = self.head.next
+      node.next = None
+    else:
+      node.prev.next = node.next
+      node.next.prev = node.prev
+      node.next = None
+      node.prev = None
+    return
 
+# 
   def delete_head(self):
-    self.head.next.prev = None
-    self.head = self.head.next
-  
+    if self.head is not None:
+      if self.head == self.tail:
+        return None
+      else:
+        self.head.next.prev = None
+        self.head = self.head.next
+        return
+
+# 
   def get_all(self):
     ret_list = []
     current_node = self.tail
@@ -49,19 +70,6 @@ class DoublyLinkedList:
       current_node = current_node.prev
     return ret_list
   
-  def print(self):
-    temp = self.head
-    while(temp is not None):
-        print(temp.data, end=' ')
-        temp = temp.get_next()
-
-dlltest = DoublyLinkedList()
-dlltest.append(1)
-dlltest.append(2)
-dlltest.append(3)
-dlltest.print()
-
-
 class Cache:
   # Initializes the cache.
   # |n|: The size of the cache.
@@ -87,12 +95,12 @@ class Cache:
         self.dll.append((url, contents))
         self.cache_dict[url] = self.dll.get_tail()
       else:
-        self.cache_dict.pop(dll.get_head.data[0])
+        self.cache_dict.pop(self.dll.get_head().data[0])
         self.dll.delete_head()
         self.dll.append((url, contents))
         self.cache_dict[url] = self.dll.get_tail()
     else:
-      self.dll.delete_mid(cache_dict[url])
+      self.dll.delete_mid(self.cache_dict[url])
       self.dll.append((url, contents))
       self.cache_dict[url] = self.dll.get_tail()
 
@@ -103,10 +111,6 @@ class Cache:
     # Write your code here :) #
     ###########################
     return self.dll.get_all()
-
-  def dict_debug(self):
-    return self.cache_dict
-
 
 # Does your code pass all test cases? :)
 def cache_test():
@@ -120,10 +124,6 @@ def cache_test():
   equal(cache.get_pages(), ["a.com"])
   # Access "b.com".
   cache.access_page("b.com", "BBB")
-  
-  # print(cache.dict_debug())
-  # print(cache.get_pages())
-
   # The cache is updated to:
   #   (most recently accessed)<-- "b.com", "a.com" -->(least recently accessed)
   equal(cache.get_pages(), ["b.com", "a.com"])
