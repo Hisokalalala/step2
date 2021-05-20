@@ -5,6 +5,8 @@ import sys
 #
 # Note: Please do not use a library (e.g., collections.OrderedDict).
 #       Implement the data structure yourself.
+
+
 class Node:
   def __init__(self, data, prev_node=None, next_node=None):
     self.prev = prev_node
@@ -16,9 +18,11 @@ class DoublyLinkedList:
     self.head = None
     self.tail = None
   
+# 最後のノードを返すメソッド
   def get_tail(self) -> Node:
     return self.tail
   
+# 最初のノードを返すメソッド
   def get_head(self) -> Node:
     return self.head
   
