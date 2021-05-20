@@ -22,6 +22,7 @@ class DoublyLinkedList:
   def get_head(self) -> Node:
     return self.head
   
+# 双方向リンクリストの最後にノードを付け足す
   def append(self, data):
     new_node = Node(data)
     if self.head is None:
@@ -33,6 +34,7 @@ class DoublyLinkedList:
       self.tail = self.tail.next
     return
 
+# キャッシュの中に<URL,Webページ>が既に存在する時、そのノードを双方向リンクリストから削除する
   def delete_mid(self, node):
     if node is None:
       raise ValueError("error!")
@@ -51,7 +53,7 @@ class DoublyLinkedList:
       node.prev = None
     return
 
-# 
+# 双方向リンクリストの先頭のノードを削除する
   def delete_head(self):
     if self.head is not None:
       if self.head == self.tail:
@@ -61,7 +63,7 @@ class DoublyLinkedList:
         self.head = self.head.next
         return
 
-# 
+# 双方向リンクリストを後ろから順に辿って、キャッシュの中身を新しい順に取得する
   def get_all(self):
     ret_list = []
     current_node = self.tail
@@ -73,6 +75,8 @@ class DoublyLinkedList:
 class Cache:
   # Initializes the cache.
   # |n|: The size of the cache.
+  # |cache_dict|: The hashtable for saving the pointer of node
+  # |dll|: The doublylinkedlist for saving the data of <URL,web page>
   def __init__(self, n):
     ###########################
     # Write your code here :) #
