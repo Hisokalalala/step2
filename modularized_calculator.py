@@ -72,8 +72,24 @@ def tokenize(line):
     return tokens
 
 
-def evaluate(tokens):
+def evaluate_plus_and_minus(tokens):
     answer = 0
+    tokens.insert(0, {'type': 'PLUS'})  # Insert a dummy '+' token
+    index = 1
+    while index < len(tokens):
+        if tokens[index]['type'] == 'NUMBER':
+            if tokens[index - 1]['type'] == 'PLUS':
+                answer += tokens[index]['number']
+            elif tokens[index - 1]['type'] == 'MINUS':
+                answer -= tokens[index]['number']
+            else:
+                print('Invalid syntax')
+                exit(1)
+        index += 1
+    return answer
+
+
+def evaluate_multiply_and_divide(tokens):
     index = 0
     while index < len(tokens):
         if tokens[index]['type'] == 'MULTIPLY':
@@ -98,18 +114,33 @@ def evaluate(tokens):
             print('Invalid syntax!')
             exit(1)
         index += 1
-    tokens.insert(0, {'type': 'PLUS'})  # Insert a dummy '+' token
-    index = 1
+    return tokens
+
+
+def evaluate(tokens):
+    stack = deque()
+    ministack = deque()
+    index = 0
     while index < len(tokens):
-        if tokens[index]['type'] == 'NUMBER':
-            if tokens[index - 1]['type'] == 'PLUS':
-                answer += tokens[index]['number']
-            elif tokens[index - 1]['type'] == 'MINUS':
-                answer -= tokens[index]['number']
-            else:
-                print('Invalid syntax')
-                exit(1)
+        if tokens[index]['type'] == 'OPBRAKETS' or tokens[index]['type'] == 'NUMBER' or tokens[index]['type'] == 'PLUS' or tokens[index]['type'] == 'MINUS' or tokens[index]['type'] == 'MULTIPLY' or tokens[index]['type'] == 'DIVIDE':
+            stack.append(tokens[index])
+        elif tokens[index]['type'] == 'CLBRAKETS':
+            while True:
+                token = stack.pop()
+                if token['type'] == "OPBRAKETS":
+                    break
+                else:
+                    ministack.appendleft(token)
+            calculated_nums_in_brakets = evaluate_plus_and_minus(evaluate_multiply_and_divide(list(ministack)))
+            ministack.clear()
+            new_token = {'type': 'NUMBER', 'number': calculated_nums_in_brakets}
+            stack.append(new_token)
+        else:
+            print('Invalid syntax!!')
+            exit(1)
         index += 1
+    tokens_with_plus_and_minus = evaluate_multiply_and_divide(list(stack))
+    answer = evaluate_plus_and_minus(tokens_with_plus_and_minus)
     return answer
 
 
@@ -147,6 +178,11 @@ def run_test():
     test("4*5/2.5")
     test("1+2*4+5-9/3+8")
     test("1.5+3*2.5-4.8/2.4-4")
+    test("(1.4-0.3)*6-(9-7)")
+    test("(3.0+4*(2-1))")
+    test("(9.9/3-5)*4/(8+(9-7))")
+    test("3+((4-7)*8-9)/5")
+    test("4.5+(3.4+3)/2*(23-4)")
 
     test("3.8/0")
     print("==== Test finished! ====\n")
