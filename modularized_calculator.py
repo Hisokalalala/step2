@@ -157,6 +157,7 @@ def test(line):
 # Add more tests to this function :)
 def run_test():
     print("==== Test started! ====")
+    test("1")
     test("1+2")
     test("1.0+2.1-3")
     test("3.4+5.6")
@@ -178,13 +179,16 @@ def run_test():
     test("4*5/2.5")
     test("1+2*4+5-9/3+8")
     test("1.5+3*2.5-4.8/2.4-4")
+    test("(1+2)")
+    test("(1+2*6)")
     test("(1.4-0.3)*6-(9-7)")
     test("(3.0+4*(2-1))")
     test("(9.9/3-5)*4/(8+(9-7))")
     test("3+((4-7)*8-9)/5")
     test("4.5+(3.4+3)/2*(23-4)")
-
-    test("3.8/0")
+    test("(4.5/(3.4*3))/2*(23-4)")
+    test("(3.8+4)*5/(9+0)")
+    test("(3.8+4)*5/0")
     print("==== Test finished! ====\n")
 
 
