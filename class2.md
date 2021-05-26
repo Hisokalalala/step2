@@ -32,27 +32,6 @@
     ```
 4. キャッシュのget_pagesでは、双方向リンクリストを後ろから順に追っていけば良い。
 
-つまり、以下のコードのような機能を、双方向リンクリストと辞書を使って実装する。
-```
-class Cache:
-  def __init__(self, n):
-    self.size = n
-    self.cache_dict = {}
-
-  def access_page(self, url, contents):
-    if self.cache_dict.get(url) == None:
-      if len(self.cache_dict) < self.size:
-        self.cache_dict[url] = contents
-      else:
-        self.cache_dict.pop(list(self.cache_dict.keys())[0])
-        self.cache_dict[url] = contents
-    else:
-      self.cache_dict.pop(url)
-      self.cache_dict[url] = contents
-
-  def get_pages(self):
-    return list(self.cache_dict.keys())[::-1]
-```
 
 ## 宿題4
 上記の疑似コードを元に、実装しました。
