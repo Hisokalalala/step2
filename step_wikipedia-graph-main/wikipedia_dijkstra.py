@@ -1,11 +1,12 @@
 from collections import deque
 import heapq
+import time
 
 
-def read_pages(path):
+def read_pages(file_path):
     pages_key_is_id = {}
     pages_key_is_title = {}
-    with open(path) as f:
+    with open(file_path) as f:
         for data in f.read().splitlines():
             page = data.split('\t')
             # page[0]: id, page[1]: title
@@ -14,9 +15,9 @@ def read_pages(path):
     return pages_key_is_id, pages_key_is_title
 
 
-def read_links(path):
+def read_links(file_path):
     links = {}
-    with open(path) as f:
+    with open(file_path) as f:
         for data in f.read().splitlines():
             link = data.split('\t')
             # link[0]: id (from), links[1]: id (to)
@@ -67,10 +68,14 @@ def main():
     # You can change start and target here
     start = "Google"
     target = "渋谷"
-
+    s = time.time()
     pages_key_id, pages_key_title = read_pages('data/pages.txt')
     links = read_links('data/links.txt')
+    m = time.time()
+    print(m-s)
     path, distance = dijkstra(pages_key_id, pages_key_title, links, start, target)
+    e = time.time()
+    print(e-m)
 
     if path is None and distance is None:
         print("Cannot find path from " + start + " to " + target)
