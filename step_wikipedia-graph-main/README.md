@@ -11,7 +11,7 @@
 
 ### 2. 他の人の書いたコードを自分の環境で実行してレビューする
 
-- (レビュー後リンクを載せます)
+- (https://gist.github.com/carinacsam/113fc83919c7bba4a04f763cbf4cde09#gistcomment-3767901)
 
 ## 準備
 
