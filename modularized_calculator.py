@@ -100,8 +100,7 @@ def evaluate_multiply_and_divide(tokens):
             index -= 1
         elif tokens[index]['type'] == 'DIVIDE':
             if tokens[index + 1]['number'] == 0:
-                print("Cannot be divided by 0")
-                exit(1)
+                raise ValueError("Cannot be divided by 0")
             else:
                 calculated_number = tokens[index - 1]['number'] / tokens[index + 1]['number']
                 new_token = {'type': 'NUMBER', 'number': calculated_number}
@@ -117,9 +116,15 @@ def evaluate_multiply_and_divide(tokens):
     return tokens
 
 
+def evaluate_arithmetic_operations(formula):
+    tokens_with_plus_and_minus = evaluate_multiply_and_divide(formula)
+    result = evaluate_plus_and_minus(tokens_with_plus_and_minus)
+    return result
+
+
 def evaluate(tokens):
     stack = deque()
-    ministack = deque()
+    minilist = deque()
     index = 0
     while index < len(tokens):
         if tokens[index]['type'] == 'OPBRAKETS' or tokens[index]['type'] == 'NUMBER' or tokens[index]['type'] == 'PLUS' or tokens[index]['type'] == 'MINUS' or tokens[index]['type'] == 'MULTIPLY' or tokens[index]['type'] == 'DIVIDE':
@@ -130,17 +135,16 @@ def evaluate(tokens):
                 if token['type'] == "OPBRAKETS":
                     break
                 else:
-                    ministack.appendleft(token)
-            calculated_nums_in_brakets = evaluate_plus_and_minus(evaluate_multiply_and_divide(list(ministack)))
-            ministack.clear()
+                    minilist.appendleft(token)
+            calculated_nums_in_brakets = evaluate_arithmetic_operations(list(minilist))
+            minilist.clear()
             new_token = {'type': 'NUMBER', 'number': calculated_nums_in_brakets}
             stack.append(new_token)
         else:
             print('Invalid syntax!!')
             exit(1)
         index += 1
-    tokens_with_plus_and_minus = evaluate_multiply_and_divide(list(stack))
-    answer = evaluate_plus_and_minus(tokens_with_plus_and_minus)
+    answer = evaluate_arithmetic_operations(list(stack))
     return answer
 
 
