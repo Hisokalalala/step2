@@ -1,3 +1,75 @@
+# Google STEP Class5
+## 問題
+与えられたinput(N=5, 8, 64, 128, 512, 2048)に対して、合計の長さが一番短い巡回経路を見つける。
+詳しい問題の詳細は、このREADMEの下の方に記載されています。
+
+## コードの関数と実装に使ったアルゴリズムと工夫
+### greedy(cities, current_city)
+#### greedy法
+現在のノードから一番近い場所にあるノードに向かって進んで行くアルゴリズム
+
+### two_opt(tour, dist)
+#### 2-opt法
+greedy法によって得られた経路のクロスしている経路があれば、クロスを解くように経路を交換し、経路からクロスしている部分をなくす。以下の図のように、AD,BCだった辺をAB,CDに交換する
+```
+ - A   B -             - A - B -
+     X         ==>     
+ - C   D -             - C - D -
+```
+
+参考: https://en.wikipedia.org/wiki/2-opt
+
+### one_or_opt(tour, dist)
+
+#### 1-or-opt法
+以下の図のように、もしBがACよりDEの間にある方が経路が短くなるのであれば、場所を交換する
+```
+ - A     C -             - A  -  C -
+     \ /
+      B         ==>           B
+                            /   \
+ - D  -  E -             - D     E -
+```
+
+### change_start
+#### スタートノードを変えて実行
+N=2048ではない時、全ての頂点をスタートノードとして試し、一番短い経路を出力しました。N=2048の時は、ランダムに30個のノードをとり、それらをスタートノードとして、30通りの経路を試し、一番短い経路を出力しました。
+
+
+## 実行結果
+### best score (bestフォルダの中に入っています)
+| Challenge   | N (= the number of cities) | Input file  | Output file  | Path_length  |
+| ----------- | -------------------------: | ----------- | ------------ | ------------ |
+| Challenge 0 |                          5 | input_0.csv | output_0.csv | 3291.62      |
+| Challenge 1 |                          8 | input_1.csv | output_1.csv | 3778.72      |
+| Challenge 2 |                         16 | input_2.csv | output_2.csv | 4494.42      |
+| Challenge 3 |                         64 | input_3.csv | output_3.csv | 8164.16      |
+| Challenge 4 |                        128 | input_4.csv | output_4.csv | 10680.10     |
+| Challenge 5 |                        512 | input_5.csv | output_5.csv | 20580.05     |
+| Challenge 6 |                       2048 | input_6.csv | output_6.csv | 41238.57     |
+
+
+### Greedy & 2opt & 全てのスタートノードを試す(実行に6時間ほどかかりました)
+| Challenge   | N (= the number of cities) | Input file  | Output file  | Path_length  |
+| ----------- | -------------------------: | ----------- | ------------ | ------------ |
+| Challenge 0 |                          5 | input_0.csv | output_0.csv | 3291.62      |
+| Challenge 1 |                          8 | input_1.csv | output_1.csv | 3832.29      |
+| Challenge 2 |                         16 | input_2.csv | output_2.csv | 4494.42      |
+| Challenge 3 |                         64 | input_3.csv | output_3.csv | 8256.55      |
+| Challenge 4 |                        128 | input_4.csv | output_4.csv | 10885.95     |
+| Challenge 5 |                        512 | input_5.csv | output_5.csv | 20932.86     |
+| Challenge 6 |                       2048 | input_6.csv | output_6.csv | 41894.18     |
+
+
+## 実行結果をもっとよくするには
+他に試せる方法として、
+* 3-opt法( https://en.wikipedia.org/wiki/3-opt )
+* 2-or-opt法
+* 焼きなまし法
+* 初期解を作るときに、Convex Hull Insertion法
+* 初期解を作るときに、クラスカル法
+
+
 # Google STEP 2021: Travelling Salesman Problem Challenges
 
 Originally By: [Hayato Ito](https://github.com/hayatoito) (hayato@google.com)  
