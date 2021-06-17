@@ -331,7 +331,7 @@ void *worst_fit_malloc(size_t size)
 }
 
 void *my_malloc(size_t size)
-{
+{ // change the implement of malloc by changing best_fit_malloc to first_fit_malloc or worst_fit_malloc
   return best_fit_malloc(size);
 }
 // my_free() is called every time an object is freed.  You are not allowed to
