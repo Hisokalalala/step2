@@ -2,15 +2,15 @@ from collections import deque
 
 
 def read_pages(file_path):
-    pages_key_is_id = {}
-    pages_key_is_title = {}
+    pages_id_to_title = {}
+    pages_title_to_id = {}
     with open(file_path) as f:
         for data in f.read().splitlines():
             page = data.split('\t')
             # page[0]: id, page[1]: title
-            pages_key_is_id[page[0]] = page[1]
-            pages_key_is_title[page[1]] = page[0]
-    return pages_key_is_id, pages_key_is_title
+            pages_id_to_title[page[0]] = page[1]
+            pages_title_to_id[page[1]] = page[0]
+    return pages_id_to_title, pages_title_to_id
 
 
 def read_links(file_path):
@@ -26,40 +26,45 @@ def read_links(file_path):
     return links
 
 
-def bfs(pages_key_is_id: dict, pages_key_is_title: dict, links: dict, start: str, target: str):
-    container = deque()
-    shortest_path = {}
+def bfs(pages_id_to_title: dict, pages_title_to_id: dict, links: dict, start: str, target: str):
+    queue = deque()
+    distance = {}
     before_node = {}
-    start_node = pages_key_is_title[start]
-    target_node = pages_key_is_title[target]
+    start_node = pages_title_to_id[start]
+    target_node = pages_title_to_id[target]
 
     # if node is checked, it is not -1
-    for key in pages_key_is_id:
-        shortest_path[key] = -1
+    for key in pages_id_to_title:
+        distance[key] = -1
 
-    shortest_path[start_node] = 0
-    container.append(start_node)
+    distance[start_node] = 0
+    queue.append(start_node)
 
-    while container:
-        now_node = container.popleft()
+    while queue:
+        current_node = queue.popleft()
 
-        if now_node == target_node:
-            temp_node = target_node
-            path = [pages_key_is_id[temp_node]]
-            while (temp_node != start_node):
-                path.append(pages_key_is_id[before_node[temp_node]])
-                temp_node = before_node[temp_node]
-            return path[::-1], shortest_path[target_node]
+        if current_node == target_node:
+            path, distance = show_path(pages_id_to_title, before_node, distance, target_node, start_node)
+            return path, distance
 
-        if now_node in links:
-            for linked_node in links[now_node]:
-                if shortest_path[linked_node] != -1:
+        if current_node in links:
+            for linked_node in links[current_node]:
+                if distance[linked_node] != -1:
                     continue
-                shortest_path[linked_node] = shortest_path[now_node] + 1
-                before_node[linked_node] = now_node
-                container.append(linked_node)
+                distance[linked_node] = distance[current_node] + 1
+                before_node[linked_node] = current_node
+                queue.append(linked_node)
 
     return None, None
+
+
+def show_path(pages_id_to_title, before_node, distance, target_node, start_node):
+    temp_node = target_node
+    path = [pages_id_to_title[temp_node]]
+    while (temp_node != start_node):
+        path.append(pages_id_to_title[before_node[temp_node]])
+        temp_node = before_node[temp_node]
+    return path[::-1], distance[target_node]
 
 
 def main():
