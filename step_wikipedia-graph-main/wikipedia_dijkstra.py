@@ -46,7 +46,6 @@ def dijkstra(pages_id_to_title, pages_title_to_id, links, start, target):
     distance[start_node] = 0
     before_node = {id: None for id in pages_id_to_title.keys()}
     queue = [(0, start_node)]
-    have_seen = {}
     heapq.heapify(queue)
 
     while queue:
@@ -54,19 +53,15 @@ def dijkstra(pages_id_to_title, pages_title_to_id, links, start, target):
 
         # avoid nodes have seen
         if current_distance > distance[current_node]:
-            have_seen.add(current_node)
             continue
 
         if current_node in links:
             for link in links[current_node]:
-                if link in have_seen:
-                    continue
-                else:
-                    edge_distance = 1
-                    if distance[link] > edge_distance + distance[current_node]:
-                        distance[link] = edge_distance + distance[current_node]
-                        before_node[link] = current_node
-                        heapq.heappush(queue, (distance[link], link))
+                edge_distance = 1
+                if distance[link] > edge_distance + distance[current_node]:
+                    distance[link] = edge_distance + distance[current_node]
+                    before_node[link] = current_node
+                    heapq.heappush(queue, (distance[link], link))
 
     path, distance = show_path(pages_id_to_title, before_node, distance, target_node, start_node)
     return path, distance
