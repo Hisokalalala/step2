@@ -9,29 +9,114 @@ double get_time()
   return tv.tv_sec + tv.tv_usec * 1e-6;
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-  if (argc != 2) {
+  if (argc != 2)
+  {
     printf("usage: %s N\n", argv[0]);
     return -1;
   }
 
   int n = atoi(argv[1]);
-  double* a = (double*)malloc(n * n * sizeof(double)); // Matrix A
-  double* b = (double*)malloc(n * n * sizeof(double)); // Matrix B
-  double* c = (double*)malloc(n * n * sizeof(double)); // Matrix C
+  double *a = (double *)malloc(n * n * sizeof(double)); // Matrix A
+  double *b = (double *)malloc(n * n * sizeof(double)); // Matrix B
+  double *c = (double *)malloc(n * n * sizeof(double)); // Matrix C
 
   // Initialize the matrices to some values.
   int i, j;
-  for (i = 0; i < n; i++) {
-    for (j = 0; j < n; j++) {
+  for (i = 0; i < n; i++)
+  {
+    for (j = 0; j < n; j++)
+    {
       a[i * n + j] = i * n + j; // A[i][j]
       b[i * n + j] = j * n + i; // B[i][j]
-      c[i * n + j] = 0; // C[i][j]
+      c[i * n + j] = 0;         // C[i][j]
     }
   }
 
+  /*
+  // i-j-k
+  int k;
+  for (i = 0; i < n; i++)
+  {
+    for (j = 0; j < n; j++)
+    {
+      for (k = 0; k < n; k++)
+      {
+        c[i * n + j] += a[i * n + k] * b[k * n + j];
+      }
+    }
+  }
+
+  //i-k-j
+    int k;
+  for (i = 0; i < n; i++)
+  {
+    for (k = 0; k < n; k++)
+    {
+      for (j = 0; j < n; j++)
+      {
+        c[i * n + j] += a[i * n + k] * b[k * n + j];
+      }
+    }
+  }
+
+  //j-i-k
+  int k;
+  for (j = 0; j < n; j++)
+  {
+    for (i = 0; i < n; i++)
+    {
+      for (k = 0; k < n; k++)
+      {
+        c[i * n + j] += a[i * n + k] * b[k * n + j];
+      }
+    }
+  }
+
+    //j-k-i
+  int k;
+  for (j = 0; j < n; j++)
+  {
+    for (k = 0; k < n; k++)
+    {
+      for (i = 0; i < n; i++)
+      {
+        c[i * n + j] += a[i * n + k] * b[k * n + j];
+      }
+    }
+  }
+
+  //k-i-j
+  int k;
+  for (k = 0; k < n; k++)
+  {
+    for (i = 0; i < n; i++)
+    {
+      for (j = 0; j < n; j++)
+      {
+        c[i * n + j] += a[i * n + k] * b[k * n + j];
+      }
+    }
+  }
+
+
+  */
+
   double begin = get_time();
+
+  //k-j-i
+  int k;
+  for (k = 0; k < n; k++)
+  {
+    for (j = 0; j < n; j++)
+    {
+      for (i = 0; i < n; i++)
+      {
+        c[i * n + j] += a[i * n + k] * b[k * n + j];
+      }
+    }
+  }
 
   /**************************************/
   /* Write code to calculate C = A * B. */
@@ -42,8 +127,10 @@ int main(int argc, char** argv)
 
   // Print C for debugging. Comment out the print before measuring the execution time.
   double sum = 0;
-  for (i = 0; i < n; i++) {
-    for (j = 0; j < n; j++) {
+  for (i = 0; i < n; i++)
+  {
+    for (j = 0; j < n; j++)
+    {
       sum += c[i * n + j];
       // printf("c[%d][%d]=%lf\n", i, j, c[i * n + j]);
     }
